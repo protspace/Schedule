@@ -5,18 +5,26 @@
 //  Created by Ievgen Sagidulin on 12/2/16.
 //  Copyright © 2016 Ievgen Sagidulin. All rights reserved.
 //
-
+#pragma GCC diagnostic ignored "-Wundeclared-selector"
 #import "AppDelegate.h"
+#import "ViewController.h"
+#import "WXTabBarController.h"
 
 @interface AppDelegate ()
-
+@property (nonatomic, strong) UINavigationController *navigationController;
+@property (nonatomic, strong) WXTabBarController *tabBarController;
 @end
 
 @implementation AppDelegate
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
+    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    
+    self.window.rootViewController = self.navigationController;
+    [self.window makeKeyAndVisible];
+    //[self deleteCache];
+    
     return YES;
 }
 
@@ -47,5 +55,121 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
+#pragma mark - Navigation Controller
+
+- (UINavigationController *)navigationController {
+    if (_navigationController == nil) {
+        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.tabBarController];
+        navigationController.navigationBar.tintColor = COLOR_WHITE_COLOR;
+        navigationController.navigationBar.translucent = NO;
+        _navigationController = navigationController;
+    }
+    return _navigationController;
+}
+
+#pragma mark - Tab Bar
+
+- (WXTabBarController *)tabBarController {
+    if (_tabBarController == nil) {
+        WXTabBarController *tabBarController = [[WXTabBarController alloc] init];
+        
+        ViewController *airViewController = ({
+            ViewController *airViewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"ViewController"];
+            
+            UIImage *discoverImage   = [UIImage imageNamed:@"tabbar_discover"];
+            UIImage *discoverHLImage = [UIImage imageNamed:@"tabbar_discoverHL"];
+            
+            airViewController.title = @"Flights";
+            airViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"Flights" image:discoverImage selectedImage:discoverHLImage];
+            airViewController.travelType = TravelTypeAir;
+            airViewController.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:airViewController action:@selector(didClickAddButton:)];
+            airViewController.navigationItem.rightBarButtonItem.tintColor = [UIColor grayColor];
+            UIBarButtonItem *order = [[UIBarButtonItem alloc] initWithTitle:@"⇵" style:UIBarButtonItemStylePlain target:airViewController action:@selector(didClickSortButton:)];
+            order.tintColor = [UIColor grayColor];
+            UIBarButtonItem *property = [[UIBarButtonItem alloc] initWithTitle:@"departure" style:UIBarButtonItemStylePlain target:airViewController action:@selector(didClickPropertyButton:)];
+            property.tintColor = [UIColor grayColor];
+            airViewController.navigationItem.leftItemsSupplementBackButton = YES;
+            airViewController.navigationItem.leftBarButtonItems = @[property, order];
+            airViewController;
+        });
+        
+        ViewController *trainsViewController = ({
+            ViewController *trainsViewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"ViewController"];
+            
+            UIImage *discoverImage   = [UIImage imageNamed:@"tabbar_discover"];
+            UIImage *discoverHLImage = [UIImage imageNamed:@"tabbar_discoverHL"];
+
+            trainsViewController.title = @"Trains";
+            trainsViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"Trains" image:discoverImage selectedImage:discoverHLImage];
+            trainsViewController.travelType = TravelTypeTrain;
+            trainsViewController.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:trainsViewController action:@selector(didClickAddButton:)];
+            trainsViewController.navigationItem.rightBarButtonItem.tintColor = [UIColor grayColor];
+            UIBarButtonItem *order = [[UIBarButtonItem alloc] initWithTitle:@"⇵" style:UIBarButtonItemStylePlain target:trainsViewController action:@selector(didClickSortButton:)];
+            order.tintColor = [UIColor grayColor];
+            UIBarButtonItem *property = [[UIBarButtonItem alloc] initWithTitle:@"departure" style:UIBarButtonItemStylePlain target:trainsViewController action:@selector(didClickPropertyButton:)];
+            property.tintColor = [UIColor grayColor];
+            trainsViewController.navigationItem.leftItemsSupplementBackButton = YES;
+            trainsViewController.navigationItem.leftBarButtonItems = @[property, order];
+            trainsViewController;
+        });
+        
+        ViewController *busesViewController = ({
+            ViewController *busesViewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"ViewController"];
+            UIImage *discoverImage   = [UIImage imageNamed:@"tabbar_discover"];
+            UIImage *discoverHLImage = [UIImage imageNamed:@"tabbar_discoverHL"];
+            
+            busesViewController.title = @"Buses";
+            busesViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"Buses" image:discoverImage selectedImage:discoverHLImage];
+            busesViewController.travelType = TravelTypeBus;
+            busesViewController.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:busesViewController action:@selector(didClickAddButton:)];
+            busesViewController.navigationItem.rightBarButtonItem.tintColor = [UIColor grayColor];
+            UIBarButtonItem *order = [[UIBarButtonItem alloc] initWithTitle:@"⇵" style:UIBarButtonItemStylePlain target:busesViewController action:@selector(didClickSortButton:)];
+            order.tintColor = [UIColor grayColor];
+            UIBarButtonItem *property = [[UIBarButtonItem alloc] initWithTitle:@"departure" style:UIBarButtonItemStylePlain target:busesViewController action:@selector(didClickPropertyButton:)];
+            property.tintColor = [UIColor grayColor];
+            busesViewController.navigationItem.leftItemsSupplementBackButton = YES;
+            busesViewController.navigationItem.leftBarButtonItems = @[property, order];
+            busesViewController;
+        });
+        
+        
+        
+        tabBarController.title = @"tabbar";
+        tabBarController.tabBar.tintColor = [UIColor colorWithRed:26 / 255.0 green:178 / 255.0 blue:10 / 255.0 alpha:1];
+        tabBarController.tabBar.translucent = NO;
+        UINavigationController *nav1 = [[UINavigationController alloc] initWithRootViewController:airViewController];
+        nav1.navigationBar.tintColor = COLOR_WHITE_COLOR;
+        nav1.navigationBar.translucent = NO;
+        UINavigationController *nav2 = [[UINavigationController alloc] initWithRootViewController:trainsViewController];
+        nav2.navigationBar.tintColor = COLOR_WHITE_COLOR;
+        nav2.navigationBar.translucent = NO;
+        UINavigationController *nav3 = [[UINavigationController alloc] initWithRootViewController:busesViewController];
+        nav3.navigationBar.tintColor = COLOR_WHITE_COLOR;
+        nav3.navigationBar.translucent = NO;
+        tabBarController.viewControllers = @[nav1, nav2, nav3];
+        
+        _tabBarController = tabBarController;
+        [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName: COLOR_GREEN_COLOR}];
+    }
+    return _tabBarController;
+}
+
+
+#pragma mark - Cache
+
+-(void) deleteCache {
+    NSString *docsDir = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
+    NSFileManager *localFileManager=[[NSFileManager alloc] init];
+    NSDirectoryEnumerator *dirEnum = [localFileManager enumeratorAtPath:docsDir];
+    
+    NSString *file;
+    NSError *error;
+    while ((file = [dirEnum nextObject]))
+    {
+        NSString *fullPath = [NSString stringWithFormat:@"%@/%@", docsDir,file];
+        // process the document
+        [localFileManager removeItemAtPath: fullPath error:&error ];
+    }
+}
 
 @end

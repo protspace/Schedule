@@ -10,6 +10,7 @@
 
 @interface ViewController : UIViewController
 
+@property TravelType travelType;
 
 @end
 
